@@ -28,25 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.InserisciButton = new System.Windows.Forms.Button();
             this.fDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.testoTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(224, 129);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(228, 127);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
             // 
             // InserisciButton
             // 
-            this.InserisciButton.Location = new System.Drawing.Point(26, 21);
+            this.InserisciButton.Location = new System.Drawing.Point(26, 12);
             this.InserisciButton.Name = "InserisciButton";
             this.InserisciButton.Size = new System.Drawing.Size(117, 64);
             this.InserisciButton.TabIndex = 1;
@@ -60,7 +50,7 @@
             // 
             // testoTextBox
             // 
-            this.testoTextBox.Location = new System.Drawing.Point(26, 129);
+            this.testoTextBox.Location = new System.Drawing.Point(26, 120);
             this.testoTextBox.Name = "testoTextBox";
             this.testoTextBox.Size = new System.Drawing.Size(117, 20);
             this.testoTextBox.TabIndex = 2;
@@ -68,7 +58,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 113);
+            this.label1.Location = new System.Drawing.Point(14, 104);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(139, 13);
             this.label1.TabIndex = 3;
@@ -82,19 +72,15 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.testoTextBox);
             this.Controls.Add(this.InserisciButton);
-            this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button InserisciButton;
         private System.Windows.Forms.OpenFileDialog fDialog1;
         private System.Windows.Forms.TextBox testoTextBox;
