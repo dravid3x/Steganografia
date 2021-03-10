@@ -15,9 +15,10 @@ namespace Steganografia
     public partial class Form1 : Form
     {
         const int dimByte = 8, offSetLabel = 15;
-        bool visualizzaSoloMex = false, prima = true;
+        bool visualizzaSoloMex = false, inserimentoDaFile = false;
         PictureBox immagineOriginale = new PictureBox();
         PictureBox nuovaImmagine = new PictureBox();    //Dichiaro la nuova picturebox per l'immagine modificata
+        OpenFileDialog fDialog1 = new OpenFileDialog();
 
         public Form1()
         {
@@ -26,46 +27,60 @@ namespace Steganografia
 
         private void InserisciButton_Click(object sender, EventArgs e)
         {
+            string Testo = testoTextBox.Text;
             //Controllo la lunghezza del testo inserito, ovvero se l'utente ha inserito del testo
-            if (testoTextBox.Text.Length == 0)
+            if (Testo.Length == 0)
             {
-                MessageBox.Show("Inserire prima il testo da camuffare");
-                return;
+                if (!inserimentoDaFile)
+                {
+                    MessageBox.Show("Inserire prima il testo da camuffare");
+                    return;
+                }
+                inserimentoDaFile = false;
+                OpenFileDialog fileTestoDialog = new OpenFileDialog();
+                DialogResult risFileTesto = fileTestoDialog.ShowDialog();
+                if(risFileTesto == DialogResult.OK)
+                {
+                    if (File.Exists(fileTestoDialog.FileName)){
+                        Testo = File.ReadAllText(fileTestoDialog.FileName);
+                    }
+                }
             }
             int offSetPic = 20;
             DialogResult result = fDialog1.ShowDialog();
-
             immagineOriginale.Location = new Point((InserisciButton.Location.X * 2) + InserisciButton.Size.Width, InserisciButton.Location.Y);       //Imposto la posizione della prima picturebox
             if (result == DialogResult.OK)  //Controllo se è stato selezionato un file adatto
             {
                 immagineOriginale.Load(fDialog1.FileName);  //Carico l'immagine originale nella prima picturebox
+                //Controllo se le dimensioni sono valide per contenere il testo
+                ulong spaziDisponibili = (ulong)(immagineOriginale.Image.Size.Width * immagineOriginale.Image.Size.Height * 3);
+                if ((ulong)Testo.Length > spaziDisponibili)
+                {
+                    MessageBox.Show("Lunghezza del testo eccessiva per l'immagine selezionata");
+                    return;
+                }
                 immagineOriginale.Size = new Size(immagineOriginale.Image.Width, immagineOriginale.Image.Height);   //Imposto la size della prima picturebox in base alle dimensioni dell'imamgine
                 this.Controls.Add(immagineOriginale);   //Aggiungo la prima picturebox all'interno del form
-                if (testoTextBox.Text.Length != 0)   //Controllo se il testo inserito è maggiore di nulla
+                nuovaImmagine.Location = new Point(immagineOriginale.Location.X + immagineOriginale.Size.Width + offSetPic, immagineOriginale.Location.Y);  //Imposto la posizione in base alla prima picturebox + un offset
+                nuovaImmagine.Size = immagineOriginale.Size;    //Copio la dimensione della prima picturebox
+                Image immagineFinale = Stg(immagineOriginale.Image, Testo);     //Salvo l'immagine che verrà modificata nell'immagine finale
+                FolderBrowserDialog fBDialog = new FolderBrowserDialog();   //Creo una FolderBrowserDialog per selezionare la cartella di destinazione dell'immagine modificata
+                fBDialog.Description = "Scegliere dove salvare l'immagine modificata";
+                DialogResult resultSalvataggio = fBDialog.ShowDialog();     //Mostro il dialogo
+                if (resultSalvataggio == DialogResult.OK)    //Controllo l'integrità della scelta
                 {
-                    //Console.WriteLine(testoTextBox.Text);
-                    //Console.WriteLine(ConvertiInBinario(testoTextBox.Text));
-                    nuovaImmagine.Location = new Point(immagineOriginale.Location.X + immagineOriginale.Size.Width + offSetPic, immagineOriginale.Location.Y);  //Imposto la posizione in base alla prima picturebox + un offset
-                    nuovaImmagine.Size = immagineOriginale.Size;    //Copio la dimensione della prima picturebox
-                    Image immagineFinale = Stg(immagineOriginale.Image, testoTextBox.Text);     //Salvo l'immagine che verrà modificata nell'immagine finale
-                    FolderBrowserDialog fBDialog = new FolderBrowserDialog();   //Creo una FolderBrowserDialog per selezionare la cartella di destinazione dell'immagine modificata
-                    fBDialog.Description = "Scegliere dove salvare l'immagine modificata";
-                    DialogResult resultSalvataggio = fBDialog.ShowDialog();     //Mostro il dialogo
-                    if (resultSalvataggio == DialogResult.OK)    //Controllo l'integrità della scelta
+                    //Salvo l'immagine modificata nella cartella scelta con estensione bmp e nome originale + "_Convertito"
+                    try
                     {
-                        //Salvo l'immagine modificata nella cartella scelta con estensione bmp e nome originale + "_Convertito"
-                        try
-                        {
-                            immagineFinale.Save(fBDialog.SelectedPath + "\\" + fDialog1.SafeFileName.Substring(0, fDialog1.SafeFileName.LastIndexOf('.')) + "_Convertito" + ".bmp");
-                        }
-                        catch (Exception errore)
-                        {
-                            MessageBox.Show("Qualcosa è andato storto\n" + errore.Message);
-                        }
+                        immagineFinale.Save(fBDialog.SelectedPath + "\\" + fDialog1.SafeFileName.Substring(0, fDialog1.SafeFileName.LastIndexOf('.')) + "_Convertito" + ".bmp");
                     }
-                    nuovaImmagine.Image = immagineFinale;   //Metto l'immagine modificata nel 
-                    this.Controls.Add(nuovaImmagine);       //Aggiungo la seconda picturebox all'interno del form
+                    catch (Exception errore)
+                    {
+                        MessageBox.Show("Qualcosa è andato storto\n" + errore.Message);
+                    }
                 }
+                nuovaImmagine.Image = immagineFinale;   //Metto l'immagine modificata nel 
+                this.Controls.Add(nuovaImmagine);       //Aggiungo la seconda picturebox all'interno del form
                 //Inseriscod dei label per distinguere l'immagine originale dalla modificata. Se eseguo più volte la conversione i label si overlappano
                 Label primaImmagineLabel = new Label();
                 primaImmagineLabel = new Label();
@@ -194,6 +209,12 @@ namespace Steganografia
             testoTextBox.ScrollBars = ScrollBars.Vertical;  //Aggiungo la scrollbar verticale
         }
 
+        private void testToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            inserimentoDaFile = true;
+            InserisciButton_Click(sender, e);
+        }
+
         private void modalitàDiSalvataggioToolStripMenuItem_Click(object sender, EventArgs e)
         {
             visualizzaSoloMex = !visualizzaSoloMex; //Abilito o disabilito la modalità solo mex
@@ -260,6 +281,11 @@ namespace Steganografia
                 else testoFinale += carattereFinale;
             }
             return testoFinale;
+        }
+
+        private string TestoDaFile(string dir)
+        {
+            return "ads";
         }
     }
 }

@@ -28,8 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.InserisciButton = new System.Windows.Forms.Button();
-            this.fDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testoTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.DecodificaButton = new System.Windows.Forms.Button();
@@ -37,22 +39,34 @@
             this.impostazioniToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modalitàDiSalvataggioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.contextMenuStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // InserisciButton
             // 
+            this.InserisciButton.ContextMenuStrip = this.contextMenuStrip1;
             this.InserisciButton.Location = new System.Drawing.Point(25, 48);
             this.InserisciButton.Name = "InserisciButton";
             this.InserisciButton.Size = new System.Drawing.Size(117, 64);
             this.InserisciButton.TabIndex = 1;
-            this.InserisciButton.Text = "Inserisci immagine";
+            this.InserisciButton.Text = "Inserisci immagine\r\nClick destro per inserimento da file";
             this.InserisciButton.UseVisualStyleBackColor = true;
             this.InserisciButton.Click += new System.EventHandler(this.InserisciButton_Click);
             // 
-            // fDialog1
+            // contextMenuStrip1
             // 
-            this.fDialog1.FileName = "openFileDialog1";
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.testToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(175, 26);
+            // 
+            // testToolStripMenuItem
+            // 
+            this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.testToolStripMenuItem.Text = "Inserimento da File";
+            this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 
             // testoTextBox
             // 
@@ -135,6 +149,7 @@
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -144,7 +159,6 @@
 
         #endregion
         private System.Windows.Forms.Button InserisciButton;
-        private System.Windows.Forms.OpenFileDialog fDialog1;
         private System.Windows.Forms.TextBox testoTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button DecodificaButton;
@@ -152,6 +166,8 @@
         private System.Windows.Forms.ToolStripMenuItem impostazioniToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem modalitàDiSalvataggioToolStripMenuItem;
         private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
     }
 }
 
