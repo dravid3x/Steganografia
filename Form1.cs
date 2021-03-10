@@ -22,7 +22,11 @@ namespace Steganografia
         {
 
             DialogResult result = fDialog1.ShowDialog();
-            if(result == DialogResult.OK) pictureBox1.Load(fDialog1.FileName);
+            if (result == DialogResult.OK)
+            {
+                pictureBox1.Load(fDialog1.FileName);
+                pictureBox1.Size = new Size(pictureBox1.Image.Width, pictureBox1.Image.Height);
+            }
             //pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             if(testoTextBox.Text.Length != 0)
             {
@@ -35,7 +39,7 @@ namespace Steganografia
         {
             Bitmap outputBitmap = new Bitmap(immagine.Width, immagine.Height);
 
-            Color coloreCorrente = (immagine as Bitmap).GetPixel(888, 20);
+            Color coloreCorrente = (immagine as Bitmap).GetPixel(0, 0);
 
             outputBitmap.SetPixel(0, 0, coloreCorrente);
 
