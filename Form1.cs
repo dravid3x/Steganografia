@@ -15,6 +15,7 @@ namespace Steganografia
     public partial class Form1 : Form
     {
         const int dimByte = 8, offSetLabel = 15;
+        string nomeFileOutput = "testoDecifrato", estensioneFileOutput = ".txt";   //Cambiare questo per cambiare il nome del file in output
         bool visualizzaSoloMex = false, inserimentoDaFile = false;
         PictureBox immagineOriginale = new PictureBox();
         PictureBox nuovaImmagine = new PictureBox();    //Dichiaro la nuova picturebox per l'immagine modificata
@@ -39,9 +40,10 @@ namespace Steganografia
                 inserimentoDaFile = false;
                 OpenFileDialog fileTestoDialog = new OpenFileDialog();
                 DialogResult risFileTesto = fileTestoDialog.ShowDialog();
-                if(risFileTesto == DialogResult.OK)
+                if (risFileTesto == DialogResult.OK)
                 {
-                    if (File.Exists(fileTestoDialog.FileName)){
+                    if (File.Exists(fileTestoDialog.FileName))
+                    {
                         Testo = File.ReadAllText(fileTestoDialog.FileName);
                     }
                 }
@@ -51,10 +53,13 @@ namespace Steganografia
             immagineOriginale.Location = new Point((InserisciButton.Location.X * 2) + InserisciButton.Size.Width, InserisciButton.Location.Y);       //Imposto la posizione della prima picturebox
             if (result == DialogResult.OK)  //Controllo se è stato selezionato un file adatto
             {
+
                 immagineOriginale.Load(fDialog1.FileName);  //Carico l'immagine originale nella prima picturebox
+
+
                 //Controllo se le dimensioni sono valide per contenere il testo
-                ulong spaziDisponibili = (ulong)(immagineOriginale.Image.Size.Width * immagineOriginale.Image.Size.Height * 3);
-                if ((ulong)Testo.Length > spaziDisponibili)
+                int spaziDisponibili = immagineOriginale.Image.Size.Width * immagineOriginale.Image.Size.Height * 3;
+                if (((Testo.Length * 8) + dimByte) > spaziDisponibili)
                 {
                     MessageBox.Show("Lunghezza del testo eccessiva per l'immagine selezionata");
                     return;
@@ -92,7 +97,6 @@ namespace Steganografia
                 seondaImmagineLabel.Text = "Modificata";
                 seondaImmagineLabel.Location = new Point(nuovaImmagine.Location.X, nuovaImmagine.Location.Y - offSetLabel);
                 Controls.Add(seondaImmagineLabel);
-
             }
             else MessageBox.Show("Selezionato file invalido");
 
@@ -117,43 +121,55 @@ namespace Steganografia
                 {
                     Color coloreCorrente = (immagine as Bitmap).GetPixel(x, y);
                     Color nuovoColore;
-                    int R = coloreCorrente.R, G = coloreCorrente.G, B = coloreCorrente.B;
-                    if (!finitoTesto)
-                    {
-                        /*In questi controlli verifico se ho terminato di "criptare" tutto il testo inserito, se no converto il valore del colore R o G o B (1 per volta) in binario all'interno di una stringa
-                         *Successivamente converto la stringa in array di tipo char per poter manipolare i singoli caratteri, ovvero i singoli bit del valore, imposterò poi l'ultimo bit del valore attuale a 0 o 1
-                         *Passo al valore successivo sia nella sequenza RGB sia nella posizione all'interno del testo in binario. Quando terminerò il testo o copierò i pixel così come sono o non li copierò affatto in base a visualizzaSoloMex
-                         */
-                        if (indice < testo.Length)
-                        {
-                            string temp = Convert.ToString(coloreCorrente.R, 2);
-                            char[] char_temp = temp.ToCharArray();
-                            char_temp[char_temp.Length - 1] = (testo[indice++] == '0') ? '0' : '1';
-                            temp = new string(char_temp);
-                            R = Convert.ToInt32(temp, 2);
-                        }
-                        else finitoTesto = true;
-                        if (indice < testo.Length)
-                        {
-                            string temp = Convert.ToString(coloreCorrente.G, 2);
-                            char[] char_temp = temp.ToCharArray();
-                            char_temp[char_temp.Length - 1] = (testo[indice++] == '0') ? '0' : '1';
-                            temp = new string(char_temp);
-                            G = Convert.ToInt32(temp, 2);
-                        }
-                        else finitoTesto = true;
-                        if (indice < testo.Length)
-                        {
-                            string temp = Convert.ToString(coloreCorrente.B, 2);
-                            char[] char_temp = temp.ToCharArray();
-                            char_temp[char_temp.Length - 1] = (testo[indice++] == '0') ? '0' : '1';
-                            temp = new string(char_temp);
-                            B = Convert.ToInt32(temp, 2);
-                        }
-                        else finitoTesto = true;
-                        nuovoColore = Color.FromArgb(coloreCorrente.A, R, G, B);
-                    }
-                    else nuovoColore = coloreCorrente;
+                    int R = coloreCorrente.R, G = coloreCorrente.G, B = coloreCorrente.B, dimTesto = testo.Length;
+
+                    /*Traduzione della riga a venire
+                     * Prima controllo se l'indice ha raggiunto la dim del testo, se si il nuovo colore sarà uguale al vecchio, altrimenti diventerà un colore nuovo il quale sarà composto dalla Alpha precedente (non la utilizziamo anche se fornirebbe un bit aggiuntivo allungando lo spazio disponibile)
+                     * La R G e B sono calcolate nel medesimo modo, viene controllato l'indice, se esso è arrivato a fine testo inserirò il valore senza modificarlo, altrimenti controllerò se esso risulta uno 0 o un 1, se 0 imposterò come valore quello restituito da AzzeraLSBit, la quale toglierà 1 al valore passatogli
+                     * In modo da mettere l'ultimo bit a 0, altrimenti se la cella ha valore 1 verrà inserito come valore quello precedente | 1, ovvero verrà impostato l'ultimo bit a 1.
+                     * (Evito il controllo dell'indice per la R avendolo appena fatto per entrare nell'if precedente
+                     */
+                    nuovoColore = (indice < dimTesto) ? Color.FromArgb(coloreCorrente.A, ((testo[indice++] == '0') ? AzzeraLSBit(R) : R | 1), ((indice < dimTesto) ? ((testo[indice++] == '0') ? AzzeraLSBit(G) : G | 1) : G), ((indice < dimTesto) ? ((testo[indice++] == '0') ? AzzeraLSBit(B) : B | 1) : B)) : coloreCorrente;
+
+#region Vecchia conversione
+                    //if (!finitoTesto)
+                    //{
+                    //    /*In questi controlli verifico se ho terminato di "criptare" tutto il testo inserito, se no converto il valore del colore R o G o B (1 per volta) in binario all'interno di una stringa
+                    //     *Successivamente converto la stringa in array di tipo char per poter manipolare i singoli caratteri, ovvero i singoli bit del valore, imposterò poi l'ultimo bit del valore attuale a 0 o 1
+                    //     *Passo al valore successivo sia nella sequenza RGB sia nella posizione all'interno del testo in binario. Quando terminerò il testo o copierò i pixel così come sono o non li copierò affatto in base a visualizzaSoloMex
+                    //     */
+                    //if (indice < testo.Length)
+                    //{
+                    //    string temp = Convert.ToString(coloreCorrente.R, 2);
+                    //    char[] char_temp = temp.ToCharArray();
+                    //    char_temp[char_temp.Length - 1] = (testo[indice++] == '0') ? '0' : '1';
+                    //    temp = new string(char_temp);
+                    //    R = Convert.ToInt32(temp, 2);
+                    //}
+                    //else finitoTesto = true;
+                    //if (indice < testo.Length)
+                    //{
+                    //    string temp = Convert.ToString(coloreCorrente.G, 2);
+                    //    char[] char_temp = temp.ToCharArray();
+                    //    char_temp[char_temp.Length - 1] = (testo[indice++] == '0') ? '0' : '1';
+                    //    temp = new string(char_temp);
+                    //    G = Convert.ToInt32(temp, 2);
+                    //}
+                    //else finitoTesto = true;
+                    //if (indice < testo.Length)
+                    //{
+                    //    string temp = Convert.ToString(coloreCorrente.B, 2);
+                    //    char[] char_temp = temp.ToCharArray();
+                    //    char_temp[char_temp.Length - 1] = (testo[indice++] == '0') ? '0' : '1';
+                    //    temp = new string(char_temp);
+                    //    B = Convert.ToInt32(temp, 2);
+                    //}
+                    //else finitoTesto = true;
+                    //    nuovoColore = Color.FromArgb(coloreCorrente.A, R, G, B);
+                    //}
+                    //else nuovoColore = coloreCorrente;
+#endregion
+
                     //Opzione per mostrare solo i pixel del testo o tutta l'immagine converita.
                     if (visualizzaSoloMex)
                     {
@@ -167,20 +183,33 @@ namespace Steganografia
             return outputBitmap;    //Restituisco l'immagine modificata
         }
 
+        #region Vecchia ConversioneInBinario
+        //private string ConvertiInBinario(string parola)
+        //{
+        //    string convertita = "";     //Dichiaro la stringa vuota
+        //    for (int i = 0; i < parola.Length; i++)      //Scorro tutta la stringa
+        //    {
+        //        string binario = Convert.ToString(parola[i], 2);    //Converto il carattere in binario
+        //        if (binario.Length < 8)  //Se c'erano zeri di fronte devo rimetterli
+        //        {
+        //            string nuovoBinario = "";
+        //            int nBitMancanti = dimByte - binario.Length;    //Calcolo quanti 0 mancano
+        //            for (int k = 0; k < nBitMancanti; k++) nuovoBinario += "0";     //Inserisco gli 0 mancanti
+        //            nuovoBinario += binario;    //Aggiungo la parte già ottenuta
+        //            binario = nuovoBinario;
+        //        }
+        //        convertita += binario;  //Sommo tutte le conversioni
+        //    }
+        //    return convertita;
+        //}
+        #endregion
+
         private string ConvertiInBinario(string parola)
         {
             string convertita = "";     //Dichiaro la stringa vuota
             for (int i = 0; i < parola.Length; i++)      //Scorro tutta la stringa
             {
-                string binario = Convert.ToString(parola[i], 2);    //Converto il carattere in binario
-                if (binario.Length < 8)  //Se c'erano zeri di fronte devo rimetterli
-                {
-                    string nuovoBinario = "";
-                    int nBitMancanti = dimByte - binario.Length;    //Calcolo quanti 0 mancano
-                    for (int k = 0; k < nBitMancanti; k++) nuovoBinario += "0";     //Inserisco gli 0 mancanti
-                    nuovoBinario += binario;    //Aggiungo la parte già ottenuta
-                    binario = nuovoBinario;
-                }
+                string binario = Convert.ToString(parola[i], 2).PadLeft(8, '0');    //Converto il carattere in binario
                 convertita += binario;  //Sommo tutte le conversioni
             }
             return convertita;
@@ -195,11 +224,35 @@ namespace Steganografia
                 //Dichiaro e aggiungo una picturebox contenente l'immagine selezionata
                 PictureBox immagineOriginale = new PictureBox();
                 immagineOriginale.Location = new Point((InserisciButton.Location.X * 2) + InserisciButton.Size.Width, InserisciButton.Location.Y);
-                immagineOriginale.Load(fDialog1.FileName);  //Carico l'immagine originale nella prima picturebox
-                immagineOriginale.Size = new Size(immagineOriginale.Image.Width, immagineOriginale.Image.Height);   //Imposto la size della prima picturebox in base alle dimensioni dell'
+                try
+                {
+                    immagineOriginale.Load(fDialog1.FileName);  //Carico l'immagine originale nella prima picturebox
+                }
+                catch (Exception eccezzione)
+                {
+                    MessageBox.Show("Errore:\n" + eccezzione.Message);
+                    return;
+                }
+
+                //immagineOriginale.Size = new Size(immagineOriginale.Image.Width, immagineOriginale.Image.Height);   //Imposto la size della prima picturebox in base alle dimensioni dell'immagine
                 string testoRicavato = Desteganografatore(immagineOriginale.Image);     //Richiamo la funzione di decodifica, potevo chiamarlo decodifica ma non puù dire che Desteganografatore non è fantastico come nome
                 //Console.WriteLine(testoRicavato);
                 textBox1.Text = testoRicavato;
+                //Salvataggio in file
+                DialogResult salvareFile = MessageBox.Show("Desidera salvare il risultato in un file di testo?", "Salvare in un file?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (salvareFile == DialogResult.Yes)
+                {
+                    DialogResult ritentare = DialogResult.Yes;
+                    while (!SalvaOutputFile(testoRicavato))
+                    {
+                        ritentare = MessageBox.Show("Qualcosa è andato storto nel salvataggio\nRitentare?", "Errore salvataggio", MessageBoxButtons.YesNo);
+                        if (ritentare == DialogResult.No) break;
+                    }
+                    if (ritentare != DialogResult.No)
+                    {
+                        MessageBox.Show("File salvato correttamente", "Salvataggio riuscito");
+                    }
+                }
             }
             else MessageBox.Show("Selezionato file invalido");
         }
@@ -283,9 +336,26 @@ namespace Steganografia
             return testoFinale;
         }
 
-        private string TestoDaFile(string dir)
+        private bool SalvaOutputFile(string testo)
         {
-            return "ads";
+            //Parte per il salvataggio dell'output in file
+            FolderBrowserDialog testoSalvare = new FolderBrowserDialog();
+            testoSalvare.Description = "Dove desidera salvare il file contenente il testo decifrato?";
+            testoSalvare.ShowDialog();
+            string posFile = testoSalvare.SelectedPath + "\\" + nomeFileOutput + estensioneFileOutput;     //Compongo la pos di destinazione aggiungendo il nome scelto per il file                                                                                           //Controllo che rileva eventuali errori nella scrittura del file, come errori di permessi ecc.
+            try
+            {
+                File.WriteAllText(posFile, testo);      //Scrivo il file di testo nella posizione scelta
+                return true;
+            }
+            catch (Exception) { return false; }
+        }
+
+        private int AzzeraLSBit(int val)
+        {
+            //In teoria mi basta aggiugnere o togliere il valore 1 all'intero per settarlo a 0. Ma prima devo identifico se è pari o dispari per vedere l'ultimo bit
+            if (val % 2 != 0) return val - 1;
+            else return val;
         }
     }
 }
