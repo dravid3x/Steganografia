@@ -183,7 +183,7 @@ namespace Steganografia
             return outputBitmap;    //Restituisco l'immagine modificata
         }
 
-        #region Vecchia ConversioneInBinario
+        #region Vecchia ConversioneInBinario V1.0
         //private string ConvertiInBinario(string parola)
         //{
         //    string convertita = "";     //Dichiaro la stringa vuota
@@ -204,14 +204,23 @@ namespace Steganografia
         //}
         #endregion
 
+        #region Vecchia ConvertiInBinario V1.5
+        //private string ConvertiInBinario(string parola)
+        //{
+        //    string convertita = "";     //Dichiaro la stringa vuota
+        //    for (int i = 0; i < parola.Length; i++)      //Scorro tutta la stringa
+        //    {
+        //        string binario = Convert.ToString(parola[i], 2).PadLeft(8, '0');    //Converto il carattere in binario
+        //        convertita += binario;  //Sommo tutte le conversioni
+        //    }
+        //    return convertita;
+        //}
+        #endregion
+
         private string ConvertiInBinario(string parola)
         {
             string convertita = "";     //Dichiaro la stringa vuota
-            for (int i = 0; i < parola.Length; i++)      //Scorro tutta la stringa
-            {
-                string binario = Convert.ToString(parola[i], 2).PadLeft(8, '0');    //Converto il carattere in binario
-                convertita += binario;  //Sommo tutte le conversioni
-            }
+            foreach(char c in parola.ToCharArray()) convertita += (Convert.ToString(c, 2).PadLeft(8, '0'));
             return convertita;
         }
 
