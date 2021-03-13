@@ -14,7 +14,7 @@ namespace Steganografia
 {
     public partial class Form1 : Form
     {
-        const int dimByte = 8, offSetLabel = 15;
+        const int dimByte = 8, offSetLabel = 15, lunghezzaBlocchiThread = 1000;
         string nomeFileOutput = "testoDecifrato", estensioneFileOutput = ".txt";   //Cambiare questo per cambiare il nome del file in output
         bool visualizzaSoloMex = false, inserimentoDaFile = false;
         PictureBox immagineOriginale = new PictureBox();
@@ -53,10 +53,7 @@ namespace Steganografia
             immagineOriginale.Location = new Point((InserisciButton.Location.X * 2) + InserisciButton.Size.Width, InserisciButton.Location.Y);       //Imposto la posizione della prima picturebox
             if (result == DialogResult.OK)  //Controllo se è stato selezionato un file adatto
             {
-
                 immagineOriginale.Load(fDialog1.FileName);  //Carico l'immagine originale nella prima picturebox
-
-
                 //Controllo se le dimensioni sono valide per contenere il testo
                 int spaziDisponibili = immagineOriginale.Image.Size.Width * immagineOriginale.Image.Size.Height * 3;
                 if (((Testo.Length * 8) + dimByte) > spaziDisponibili)
@@ -131,7 +128,7 @@ namespace Steganografia
                      */
                     nuovoColore = (indice < dimTesto) ? Color.FromArgb(coloreCorrente.A, ((testo[indice++] == '0') ? AzzeraLSBit(R) : R | 1), ((indice < dimTesto) ? ((testo[indice++] == '0') ? AzzeraLSBit(G) : G | 1) : G), ((indice < dimTesto) ? ((testo[indice++] == '0') ? AzzeraLSBit(B) : B | 1) : B)) : coloreCorrente;
 
-#region Vecchia conversione
+                    #region Vecchia conversione
                     //if (!finitoTesto)
                     //{
                     //    /*In questi controlli verifico se ho terminato di "criptare" tutto il testo inserito, se no converto il valore del colore R o G o B (1 per volta) in binario all'interno di una stringa
@@ -168,7 +165,7 @@ namespace Steganografia
                     //    nuovoColore = Color.FromArgb(coloreCorrente.A, R, G, B);
                     //}
                     //else nuovoColore = coloreCorrente;
-#endregion
+                    #endregion
 
                     //Opzione per mostrare solo i pixel del testo o tutta l'immagine converita.
                     if (visualizzaSoloMex)
@@ -181,47 +178,6 @@ namespace Steganografia
                 y++;
             }
             return outputBitmap;    //Restituisco l'immagine modificata
-        }
-
-        #region Vecchia ConversioneInBinario V1.0
-        //private string ConvertiInBinario(string parola)
-        //{
-        //    string convertita = "";     //Dichiaro la stringa vuota
-        //    for (int i = 0; i < parola.Length; i++)      //Scorro tutta la stringa
-        //    {
-        //        string binario = Convert.ToString(parola[i], 2);    //Converto il carattere in binario
-        //        if (binario.Length < 8)  //Se c'erano zeri di fronte devo rimetterli
-        //        {
-        //            string nuovoBinario = "";
-        //            int nBitMancanti = dimByte - binario.Length;    //Calcolo quanti 0 mancano
-        //            for (int k = 0; k < nBitMancanti; k++) nuovoBinario += "0";     //Inserisco gli 0 mancanti
-        //            nuovoBinario += binario;    //Aggiungo la parte già ottenuta
-        //            binario = nuovoBinario;
-        //        }
-        //        convertita += binario;  //Sommo tutte le conversioni
-        //    }
-        //    return convertita;
-        //}
-        #endregion
-
-        #region Vecchia ConvertiInBinario V1.5
-        //private string ConvertiInBinario(string parola)
-        //{
-        //    string convertita = "";     //Dichiaro la stringa vuota
-        //    for (int i = 0; i < parola.Length; i++)      //Scorro tutta la stringa
-        //    {
-        //        string binario = Convert.ToString(parola[i], 2).PadLeft(8, '0');    //Converto il carattere in binario
-        //        convertita += binario;  //Sommo tutte le conversioni
-        //    }
-        //    return convertita;
-        //}
-        #endregion
-
-        private string ConvertiInBinario(string parola)
-        {
-            string convertita = "";     //Dichiaro la stringa vuota
-            foreach(char c in parola.ToCharArray()) convertita += (Convert.ToString(c, 2).PadLeft(8, '0'));
-            return convertita;
         }
 
         private void DecodificaButton_Click(object sender, EventArgs e)
@@ -365,6 +321,142 @@ namespace Steganografia
             //In teoria mi basta aggiugnere o togliere il valore 1 all'intero per settarlo a 0. Ma prima devo identifico se è pari o dispari per vedere l'ultimo bit
             if (val % 2 != 0) return val - 1;
             else return val;
+        }
+
+        #region Vecchia ConversioneInBinario V1.0
+        //private string ConvertiInBinario(string parola)
+        //{
+        //    string convertita = "";     //Dichiaro la stringa vuota
+        //    for (int i = 0; i < parola.Length; i++)      //Scorro tutta la stringa
+        //    {
+        //        string binario = Convert.ToString(parola[i], 2);    //Converto il carattere in binario
+        //        if (binario.Length < 8)  //Se c'erano zeri di fronte devo rimetterli
+        //        {
+        //            string nuovoBinario = "";
+        //            int nBitMancanti = dimByte - binario.Length;    //Calcolo quanti 0 mancano
+        //            for (int k = 0; k < nBitMancanti; k++) nuovoBinario += "0";     //Inserisco gli 0 mancanti
+        //            nuovoBinario += binario;    //Aggiungo la parte già ottenuta
+        //            binario = nuovoBinario;
+        //        }
+        //        convertita += binario;  //Sommo tutte le conversioni
+        //    }
+        //    return convertita;
+        //}
+        #endregion
+
+        #region Vecchia ConvertiInBinario V1.5
+        //private string ConvertiInBinario(string parola)
+        //{
+        //    string convertita = "";     //Dichiaro la stringa vuota
+        //    for (int i = 0; i < parola.Length; i++)      //Scorro tutta la stringa
+        //    {
+        //        string binario = Convert.ToString(parola[i], 2).PadLeft(8, '0');    //Converto il carattere in binario
+        //        convertita += binario;  //Sommo tutte le conversioni
+        //    }
+        //    return convertita;
+        //}
+        #endregion
+
+        #region ConvertiInBinario V1.7
+        //private string ConvertiInBinario(string parola)
+        //{
+        //    string convertita = "";     //Dichiaro la stringa vuota
+        //    foreach (char c in parola) convertita += (Convert.ToString(c, 2).PadLeft(8, '0'));
+        //    return convertita;
+        //}
+        #endregion
+
+        private string ConvertiInBinario(string parola)
+        {
+            schiavoMaster master = new schiavoMaster(parola);
+            master.DoWork += schiavoMaster_Lavoro;
+            master.RunWorkerCompleted += schiavoMaster_LavoroCompletato;
+            master.RunWorkerAsync();
+            while (!master.finito) ;
+            return master.testoFinito;
+        }
+
+        private void schiavoMaster_Lavoro(object sender, DoWorkEventArgs e)
+        {
+            schiavoMaster master = sender as schiavoMaster;
+            string testoFinito = "";
+            bool finitoTutti = false;
+            List<BackgroundWorker> schiavi = new List<BackgroundWorker>();
+            string testo = master.testoDaProcessare;
+            int nSchiavi = (testo.Length + lunghezzaBlocchiThread - 1)/ lunghezzaBlocchiThread;
+            List<string> pezzi = new List<string>();
+            for(int i = 0; i < nSchiavi; i++)
+            {
+                string pezzo = "";
+                blocco(ref testo, ref pezzo, i);
+                pezzi.Add(pezzo);
+            }
+
+
+            for (int i = 0; i < nSchiavi; i++)
+            {
+                //string bloccoDiTesto = "";
+                //blocco(ref testo, ref bloccoDiTesto, i);
+                schiavo worker = new schiavo(pezzi[i]);
+                //Potrei usarlo per segnalare a che punto della conversione lo schiavo è, ma per velocizzare il tutto evito di richiamare la funzione, segnalo solo quando ho finito
+                //worker.WorkerReportsProgress = true;
+                worker.WorkerSupportsCancellation = true;
+                worker.DoWork += schiavoWorker_Lavoro;
+                worker.RunWorkerCompleted += schiavoWorker_LavoroCompletato;
+                //worker.ProgressChanged += schiavoWorker_ProgressChanged;
+                schiavi.Add(worker);
+                schiavi[schiavi.Count - 1].RunWorkerAsync();
+            }
+            while (!finitoTutti)
+            {
+                finitoTutti = true;
+                foreach (schiavo worker in schiavi)
+                {
+                    if (!worker.finito)
+                    {
+                        finitoTutti = false;
+                        break;
+                    }
+                }
+            }
+            foreach (schiavo worker in schiavi) testoFinito += worker.testoProcessato;
+            master.testoFinito = testoFinito;
+            master.finito = finitoTutti;
+        }
+
+        private void schiavoMaster_LavoroCompletato(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //if (e.Cancelled == true)
+            if (e.Error != null)
+            {
+                Console.WriteLine("Errore nello schiavo");
+            }
+        }
+
+        private void schiavoWorker_Lavoro(object sender, DoWorkEventArgs e)
+        {
+            schiavo worker = sender as schiavo;
+            foreach (char c in worker.testoDaProcessare) worker.testoProcessato += (Convert.ToString(c, 2).PadLeft(8, '0'));
+        }
+
+        private void schiavoWorker_LavoroCompletato(object sender, RunWorkerCompletedEventArgs e)
+        {
+            schiavo worker = sender as schiavo;
+            worker.finito = true;
+        }
+
+        private void blocco(ref string testoOriginale, ref string bloccoDiTesto, int nSchiavo)
+        {
+            if (testoOriginale.Length >= (nSchiavo * lunghezzaBlocchiThread))   //Parti normali da lunghezzaBlocchi
+            {
+                bloccoDiTesto = testoOriginale.Substring(0, lunghezzaBlocchiThread);
+                testoOriginale = testoOriginale.Remove(0, lunghezzaBlocchiThread);
+            }
+            else    //Ultimo blocco minore di lunghezzaBlocchi
+            {
+                bloccoDiTesto = testoOriginale.Substring(0, testoOriginale.Length);
+                testoOriginale = testoOriginale.Remove(0, testoOriginale.Length);
+            }
         }
     }
 }
