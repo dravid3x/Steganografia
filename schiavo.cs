@@ -15,7 +15,7 @@ namespace Steganografia
 
         public schiavo()
         {
-
+            //Non inserisco il testo da processare come parametro per poter riutilizzare questo schiavo anche nella decriptazione
         }
 
     }

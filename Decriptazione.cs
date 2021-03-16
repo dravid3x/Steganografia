@@ -13,10 +13,11 @@ namespace Steganografia
 {
     public partial class Decriptazione : Form
     {
-        const int dimByte = 8;
-        Bitmap immagineCaricata, immagineVuota;
-        schiavo decriptazioneWorker = new schiavo();
-        string testoOttenuto = "";
+        private const int dimByte = 8;
+        private Bitmap immagineCaricata;
+        private readonly Bitmap immagineVuota;
+        private schiavo decriptazioneWorker = new schiavo();
+        private string testoOttenuto = "";
 
         public Decriptazione()
         {
@@ -26,12 +27,13 @@ namespace Steganografia
         private void Decriptazione_Load(object sender, EventArgs e)
         {
             immagineCaricataPic.SizeMode = PictureBoxSizeMode.StretchImage; //Strecho l'immagine per farcela stare
-            textDecriptato.ScrollBars = ScrollBars.Vertical;
-            decriptazioneWorker.WorkerReportsProgress = true;
-            decriptazioneWorker.WorkerSupportsCancellation = true;
-            decriptazioneWorker.RunWorkerCompleted += decriptazioneWorker_LavoroCompletato;
-            decriptazioneWorker.ProgressChanged += decriptazioneWorker_ProgressChanged;
-            decriptazioneWorker.DoWork += decriptazioneWorker_Lavora;
+            textDecriptato.ScrollBars = ScrollBars.Vertical;    //Imposto la barra per scorrere la textbox
+            decriptazioneWorker.WorkerReportsProgress = true;   //Abilito il report dello stato del worker
+            decriptazioneWorker.WorkerSupportsCancellation = true;  //Abilito la possibilità di cancellare la task del thread
+            decriptazioneWorker.RunWorkerCompleted += decriptazioneWorker_LavoroCompletato;     //Associo la funzione di LavoroCompletato
+            decriptazioneWorker.ProgressChanged += decriptazioneWorker_ProgressChanged;     //Associo la funzione di quando il worker progredisce
+            decriptazioneWorker.DoWork += decriptazioneWorker_Lavora;       //Associo la funzione di Lavoro
+            progressoLabel.Text = "Stato conversione: In Attesa";
         }
 
         private void checkAnteprima_CheckedChanged(object sender, EventArgs e)
@@ -50,6 +52,7 @@ namespace Steganografia
         {
             //Funzione che permette il caricamento di un immagine
             OpenFileDialog fDialog = new OpenFileDialog();
+            fDialog.Filter = "Immagine Bitmap|*.BMP";
             DialogResult result = fDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -59,34 +62,39 @@ namespace Steganografia
                     immagineCaricata = new Bitmap(fDialog.FileName);      //Carico l'immagine originale nella variabile globale
                     if (checkAnteprima.Checked == true) immagineCaricataPic.Image = immagineCaricata;
                 }
-                catch (Exception eccezzione)
+                catch (Exception eccezione)
                 {
-                    MessageBox.Show("Errore:\n" + eccezzione.Message);
+                    MessageBox.Show("Errore:\n" + eccezione.Message);
                     return;
                 }
             }
-            else MessageBox.Show("Selezionato file invalido");
         }
 
         private void decriptaButton_Click(object sender, EventArgs e)
         {
-            if (decriptazioneWorker.IsBusy != true)
+            //Controllo se è stata caricata un immagine, confrontando l'immagineCaricata con un'immagineVuota
+            if (immagineCaricata == immagineVuota)
             {
-                //Inizio il lavoro di decriptazione, imposto il valore attuale e massimo della progressBar
-                progressBar1.Maximum = immagineCaricata.Width * immagineCaricata.Height;
-                progressBar1.Value = 0;
-                progressBar1.Step = 1;
                 textDecriptato.Clear();
-                progressoLabel.Text = "Posizione/Progresso nell'immagine in pixel";
-                nPixelLabel.Text = progressBar1.Maximum.ToString() + " Pixel Totali";
-                decriptazioneWorker.RunWorkerAsync();
+                textDecriptato.Text = "Nessuna immagine caricata...";
             }
             else
             {
-                //Se il worker è impegnato cancello la richiesta e inizio la nuova
-                decriptazioneWorker.CancelAsync();
-                progressBar1.Value = 0;
-                decriptazioneWorker.RunWorkerAsync();
+                if (decriptazioneWorker.IsBusy != true)
+                {
+                    //Inizio il lavoro di decriptazione, imposto il valore attuale e massimo della progressBar
+                    progressBar1.Maximum = immagineCaricata.Width * immagineCaricata.Height;    //Imposto il valore massimo della progressBar
+                    progressBar1.Value = 0;     //Imposto a 0 il valore della progressBar
+                    progressBar1.Step = 1;      //Imposto a 1 il valore che verrà aggiunto ad ogni "passo avanti" della progressBar (ovvero ogni volta che avanzo di 1 pixel"
+                    textDecriptato.Clear();     //Ripulisco la textBox del testoDecriptato
+                    progressoLabel.Text = "Stato Conversione: In Corso";
+                    nPixelLabel.Text = progressBar1.Maximum.ToString() + " Pixel Totali";
+                    decriptazioneWorker.RunWorkerAsync();       //Do il via alla conversione
+                }
+                else
+                {
+                    MessageBox.Show("Vi è un processo già in corso.\nCancellarlo per poter procedere ad una nuova decriptazione o attendere che finisca.");
+                }
             }
         }
 
@@ -99,15 +107,18 @@ namespace Steganografia
         {
             if (e.Cancelled == true)
             {
-                progressoLabel.Text = "Cancellato!";
+                //Identifico che il lavoro è stato cancellato
+                label2.Text = "Cancellato!";
             }
             else if (e.Error != null)
             {
-                progressoLabel.Text = "Errore: " + e.Error.Message;
+                //Identifico che il worker ha avuto un problema
+                label2.Text = "Errore: " + e.Error.Message;
             }
             else
             {
-                progressoLabel.Text = "Completato!";
+                //Identifico che il worker ha terminato il suo compito correttamente
+                progressoLabel.Text = "Stato Conversione: Completata!";
                 testoOttenuto = decriptazioneWorker.testoProcessato;
                 textDecriptato.Text = testoOttenuto;
             }
@@ -126,6 +137,7 @@ namespace Steganografia
                 string carattereAttuale = "";
                 while (pos < dimByte)
                 {
+                    //Controllo se vi è una richiesta di interruzione del lavoro
                     if (worker.CancellationPending)
                     {
                         e.Cancel = true;
@@ -160,7 +172,7 @@ namespace Steganografia
                     else posColore++;
                     pos++;
                 }
-                //Controllo se l'utente ha richiesto la cancellazione del thread
+                //Controllo se l'utente ha richiesto la cancellazione del thread, questo controllo serve a impedire conversioni che potrebbero causare problemi
                 if (!e.Cancel)
                 {
                     char carattereFinale = (char)Convert.ToInt32(carattereAttuale, 2);
@@ -178,43 +190,31 @@ namespace Steganografia
             //Controllo inutile ma sempre meglio inserirlo
             if (decriptazioneWorker.WorkerSupportsCancellation == true)
             {
-                decriptazioneWorker.CancelAsync();  //Cancella il lavoro in corso
+                decriptazioneWorker.CancelAsync();  //Cancello il lavoro in corso
             }
         }
 
         private void salvaButton_Click(object sender, EventArgs e)
         {
-            //Salvataggio in file
-            DialogResult salvareFile = MessageBox.Show("Desidera salvare il risultato in un file di testo?", "Salvare in un file?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-            if (salvareFile == DialogResult.Yes)
-            {
-                DialogResult ritentare = DialogResult.Yes;
-                while (!SalvaOutputFile(testoOttenuto))
-                {
-                    ritentare = MessageBox.Show("Qualcosa è andato storto nel salvataggio\nRitentare?", "Errore salvataggio", MessageBoxButtons.YesNo);
-                    if (ritentare == DialogResult.No) break;
-                }
-                if (ritentare != DialogResult.No)
-                {
-                    MessageBox.Show("File salvato correttamente", "Salvataggio riuscito");
-                }
-            }
+            //Richiamo la funzione per salvare una stringa in un file
+            SalvaTestoInFile(testoOttenuto);
         }
 
-        private bool SalvaOutputFile(string testo)
+        private void SalvaTestoInFile(string testo)
         {
-            //Parte per il salvataggio dell'output in file
+            //Parte per il salvataggio di testo in un file
             SaveFileDialog testoSalvare = new SaveFileDialog();
             testoSalvare.Title = "Dove desidera salvare il file contenente il testo decifrato?";
             testoSalvare.DefaultExt = "txt";
+            testoSalvare.Filter = "File txt|*.txt|All files (*.*)|*.*";
             testoSalvare.ShowDialog();
-            string posFile = testoSalvare.FileName;     //Compongo la pos di destinazione aggiungendo il nome scelto per il file                                                                                           //Controllo che rileva eventuali errori nella scrittura del file, come errori di permessi ecc.
+            string posFile = testoSalvare.FileName;
+            //Controllo che rileva eventuali errori nella scrittura del file.
             try
             {
                 File.WriteAllText(posFile, testo);      //Scrivo il file di testo nella posizione scelta
-                return true;
             }
-            catch (Exception) { return false; }
+            catch (Exception) { /*MessageBox.Show(ecc.Message);*/ }
         }
     }
 }

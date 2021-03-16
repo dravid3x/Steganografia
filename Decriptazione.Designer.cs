@@ -38,8 +38,9 @@ namespace Steganografia
             this.cancellaDecButton = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.salvaButton = new System.Windows.Forms.Button();
-            this.progressoLabel = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.nPixelLabel = new System.Windows.Forms.Label();
+            this.progressoLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.immagineCaricataPic)).BeginInit();
             this.SuspendLayout();
             // 
@@ -69,12 +70,11 @@ namespace Steganografia
             this.immagineCaricataPic.Size = new System.Drawing.Size(163, 197);
             this.immagineCaricataPic.TabIndex = 2;
             this.immagineCaricataPic.TabStop = false;
+            this.immagineCaricataPic.Visible = false;
             // 
             // checkAnteprima
             // 
             this.checkAnteprima.AutoSize = true;
-            this.checkAnteprima.Checked = true;
-            this.checkAnteprima.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkAnteprima.Location = new System.Drawing.Point(33, 145);
             this.checkAnteprima.Name = "checkAnteprima";
             this.checkAnteprima.Size = new System.Drawing.Size(163, 17);
@@ -129,14 +129,14 @@ namespace Steganografia
             this.salvaButton.UseVisualStyleBackColor = true;
             this.salvaButton.Click += new System.EventHandler(this.salvaButton_Click);
             // 
-            // progressoLabel
+            // label2
             // 
-            this.progressoLabel.Location = new System.Drawing.Point(370, 129);
-            this.progressoLabel.Name = "progressoLabel";
-            this.progressoLabel.Size = new System.Drawing.Size(204, 13);
-            this.progressoLabel.TabIndex = 9;
-            this.progressoLabel.Text = "Posizione/Progresso nell\'immagine in pixel";
-            this.progressoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label2.Location = new System.Drawing.Point(370, 129);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(204, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Posizione/Progresso nell\'immagine in pixel";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // nPixelLabel
             // 
@@ -147,6 +147,15 @@ namespace Steganografia
             this.nPixelLabel.Text = "Pixel Totali";
             this.nPixelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // progressoLabel
+            // 
+            this.progressoLabel.Location = new System.Drawing.Point(370, 175);
+            this.progressoLabel.Name = "progressoLabel";
+            this.progressoLabel.Size = new System.Drawing.Size(204, 13);
+            this.progressoLabel.TabIndex = 9;
+            this.progressoLabel.Text = "Stato conversione: In Attesa";
+            this.progressoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Decriptazione
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -154,6 +163,7 @@ namespace Steganografia
             this.ClientSize = new System.Drawing.Size(726, 433);
             this.Controls.Add(this.nPixelLabel);
             this.Controls.Add(this.progressoLabel);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.salvaButton);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.cancellaDecButton);
@@ -183,7 +193,8 @@ namespace Steganografia
         private System.Windows.Forms.Button cancellaDecButton;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button salvaButton;
-        private System.Windows.Forms.Label progressoLabel;
+        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label nPixelLabel;
+        private System.Windows.Forms.Label progressoLabel;
     }
 }
