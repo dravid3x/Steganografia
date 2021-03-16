@@ -46,6 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Criptazione.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Criptazione.Designer.cs">
+      <DependentUpon>Criptazione.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Decriptazione.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Decriptazione.Designer.cs">
+      <DependentUpon>Decriptazione.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -57,6 +69,9 @@
     <Compile Include="schiavo.cs">
       <SubType>Component</SubType>
     </Compile>
+    <EmbeddedResource Include="Decriptazione.resx">
+      <DependentUpon>Decriptazione.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

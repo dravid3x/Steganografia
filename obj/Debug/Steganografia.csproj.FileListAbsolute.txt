@@ -8,3 +8,4 @@ C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\Re
 C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.csproj.CoreCompileInputs.cache
 C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.exe
 C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.pdb
+C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.Decriptazione.resources

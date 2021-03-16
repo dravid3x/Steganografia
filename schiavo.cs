@@ -13,9 +13,9 @@ namespace Steganografia
         public string testoDaProcessare = "", testoProcessato = "";
         public bool finito = false;
 
-        public schiavo(string testo)
+        public schiavo()
         {
-            testoDaProcessare = testo;
+
         }
 
     }
