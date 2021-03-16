@@ -76,6 +76,9 @@ namespace Steganografia
                 progressBar1.Maximum = immagineCaricata.Width * immagineCaricata.Height;
                 progressBar1.Value = 0;
                 progressBar1.Step = 1;
+                textDecriptato.Clear();
+                progressoLabel.Text = "Posizione/Progresso nell'immagine in pixel";
+                nPixelLabel.Text = progressBar1.Maximum.ToString() + " Pixel Totali";
                 decriptazioneWorker.RunWorkerAsync();
             }
             else
@@ -123,6 +126,12 @@ namespace Steganografia
                 string carattereAttuale = "";
                 while (pos < dimByte)
                 {
+                    if (worker.CancellationPending)
+                    {
+                        e.Cancel = true;
+                        tailDetected = true;
+                        break;
+                    }
                     Color colore = (immagineCaricata as Bitmap).GetPixel(x, y);
                     //Switch ce esegue la conversione e salvataggio del char trovato in base al turno R, G o B
                     switch (posColore)
@@ -151,11 +160,15 @@ namespace Steganografia
                     else posColore++;
                     pos++;
                 }
-                char carattereFinale = (char)Convert.ToInt32(carattereAttuale, 2);
-                if (carattereFinale == (char)Convert.ToInt32(carattereFine, 2)) tailDetected = true;    //Controllo per identificare la tail che indica la fine del messaggio
-                else testoFinale += carattereFinale;
-                progresso++;
-                worker.ReportProgress(progresso);       //Dico al worker di riferire il progresso fatto, ovvero a che pixel siamo
+                //Controllo se l'utente ha richiesto la cancellazione del thread
+                if (!e.Cancel)
+                {
+                    char carattereFinale = (char)Convert.ToInt32(carattereAttuale, 2);
+                    if (carattereFinale == (char)Convert.ToInt32(carattereFine, 2)) tailDetected = true;    //Controllo per identificare la tail che indica la fine del messaggio
+                    else testoFinale += carattereFinale;
+                    progresso++;
+                    worker.ReportProgress(progresso);       //Dico al worker di riferire il progresso fatto, ovvero a che pixel siamo
+                }
             }
             worker.testoProcessato = testoFinale;   //Salvo il testo ottenuto
         }

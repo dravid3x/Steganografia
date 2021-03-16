@@ -39,6 +39,7 @@ namespace Steganografia
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.salvaButton = new System.Windows.Forms.Button();
             this.progressoLabel = new System.Windows.Forms.Label();
+            this.nPixelLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.immagineCaricataPic)).BeginInit();
             this.SuspendLayout();
             // 
@@ -87,6 +88,7 @@ namespace Steganografia
             this.textDecriptato.Location = new System.Drawing.Point(277, 197);
             this.textDecriptato.Multiline = true;
             this.textDecriptato.Name = "textDecriptato";
+            this.textDecriptato.ReadOnly = true;
             this.textDecriptato.Size = new System.Drawing.Size(375, 197);
             this.textDecriptato.TabIndex = 4;
             // 
@@ -129,18 +131,28 @@ namespace Steganografia
             // 
             // progressoLabel
             // 
-            this.progressoLabel.AutoSize = true;
-            this.progressoLabel.Location = new System.Drawing.Point(438, 129);
+            this.progressoLabel.Location = new System.Drawing.Point(370, 129);
             this.progressoLabel.Name = "progressoLabel";
-            this.progressoLabel.Size = new System.Drawing.Size(54, 13);
+            this.progressoLabel.Size = new System.Drawing.Size(204, 13);
             this.progressoLabel.TabIndex = 9;
-            this.progressoLabel.Text = "Progresso";
+            this.progressoLabel.Text = "Posizione/Progresso nell\'immagine in pixel";
+            this.progressoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // nPixelLabel
+            // 
+            this.nPixelLabel.Location = new System.Drawing.Point(593, 175);
+            this.nPixelLabel.Name = "nPixelLabel";
+            this.nPixelLabel.Size = new System.Drawing.Size(97, 13);
+            this.nPixelLabel.TabIndex = 10;
+            this.nPixelLabel.Text = "Pixel Totali";
+            this.nPixelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Decriptazione
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 433);
+            this.ClientSize = new System.Drawing.Size(726, 433);
+            this.Controls.Add(this.nPixelLabel);
             this.Controls.Add(this.progressoLabel);
             this.Controls.Add(this.salvaButton);
             this.Controls.Add(this.progressBar1);
@@ -172,5 +184,6 @@ namespace Steganografia
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button salvaButton;
         private System.Windows.Forms.Label progressoLabel;
+        private System.Windows.Forms.Label nPixelLabel;
     }
 }
