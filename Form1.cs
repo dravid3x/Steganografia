@@ -24,6 +24,7 @@ namespace Steganografia
         public Form1()
         {
             InitializeComponent();
+
         }
 
         private void InserisciButton_Click(object sender, EventArgs e)
