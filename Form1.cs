@@ -256,28 +256,13 @@ namespace Steganografia
                     switch (posColore)
                     {
                         case 0:
-                            {
-                                //Converto in binario, poi in array di char e prendo il LSB
-                                string temp = Convert.ToString(colore.R, 2);
-                                char[] char_temp = temp.ToCharArray();
-                                carattereAttuale += (char_temp[char_temp.Length - 1] == '0') ? "0" : "1";
-                            }
+                            carattereAttuale += (colore.R % 2 == 0) ? "0" : "1";
                             break;
                         case 1:
-                            {
-                                //Converto in binario, poi in array di char e prendo il LSB
-                                string temp = Convert.ToString(colore.G, 2);
-                                char[] char_temp = temp.ToCharArray();
-                                carattereAttuale += (char_temp[char_temp.Length - 1] == '0') ? "0" : "1";
-                            }
+                            carattereAttuale += (colore.G % 2 == 0) ? "0" : "1";
                             break;
                         case 2:
-                            {
-                                //Converto in binario, poi in array di char e prendo il LSB
-                                string temp = Convert.ToString(colore.B, 2);
-                                char[] char_temp = temp.ToCharArray();
-                                carattereAttuale += (char_temp[char_temp.Length - 1] == '0') ? "0" : "1";
-                            }
+                            carattereAttuale += (colore.B % 2 == 0) ? "0" : "1";
                             break;
                     }
                     //Controllo per ricominciare da R se arrivo a B, con annesso controllo della x per passare al pixel successivo senza sbordare, se sbordo aumento la y e resetto la x
@@ -368,12 +353,22 @@ namespace Steganografia
 
         private string ConvertiInBinario(string parola)
         {
-            schiavoMaster master = new schiavoMaster(parola);
-            master.DoWork += schiavoMaster_Lavoro;
-            master.RunWorkerCompleted += schiavoMaster_LavoroCompletato;
-            master.RunWorkerAsync();
-            while (!master.finito) ;
-            return master.testoFinito;
+            if(parola.Length < lunghezzaBlocchiThread)
+            {
+                string res = "";
+                foreach (char c in parola) res += (Convert.ToString(c, 2).PadLeft(8, '0'));
+                return res;
+            }
+            else
+            {
+                schiavoMaster master = new schiavoMaster(parola);
+                master.DoWork += schiavoMaster_Lavoro;
+                master.RunWorkerCompleted += schiavoMaster_LavoroCompletato;
+                master.RunWorkerAsync();
+                while (!master.finito) ;
+                return master.testoFinito;
+            }
+
         }
 
         private void schiavoMaster_Lavoro(object sender, DoWorkEventArgs e)
