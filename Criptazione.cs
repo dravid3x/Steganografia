@@ -42,6 +42,7 @@ namespace Steganografia
                 pezzi.Add(pezzo);
             }
             mastino.pezzi = pezzi;  //Passo la lista di pezzi al mastino
+            MessageBox.Show(((testoDaCodificare.Length + lunghezzaBlocchiThread - 1) / lunghezzaBlocchiThread).ToString());
             mastino.GeneraSchiavi((testoDaCodificare.Length + lunghezzaBlocchiThread - 1) / lunghezzaBlocchiThread);
         }
 
@@ -189,7 +190,6 @@ namespace Steganografia
             {
                 //sindacoStatusLabel.Text = "Status: Conversione Binaria";
                 ConvertiInBinario(testoDaCodificare);
-                testoInBinario = Mastino.testoProcessato;
                 //sindacoStatusLabel.Text = "Status: Conclusa Conversione Binaria";
                 worker.ReportProgress(50);
             }
@@ -225,9 +225,14 @@ namespace Steganografia
         private void binarioUpdateButton_Click(object sender, EventArgs e)
         {
             binarioBar.Value = Mastino.ContaFiniti();
-            if (Mastino.finito)
+            if (Mastino.finito && binarioBar.Value != 0)
             {
                 testoInBinario = Mastino.testoProcessato;
+                IniziaConversioneImmagine();
+            }
+            else
+            {
+                binarioBar.Value = binarioBar.Maximum;
                 IniziaConversioneImmagine();
             }
         }
@@ -258,15 +263,14 @@ namespace Steganografia
             //Indice per la posizione nella stringa binaria
             int indice = 0, posTotaleStatus = 0;
             string carattereFine = "00000100";    //carattere identificativo della fine del testo
-            bool cancellato = false;
             testo = testoInBinario;
             testo += carattereFine;
             //Console.WriteLine(testo);
             int y = 0;
-            while (y < immagine.Height && !cancellato)
+            while (y < immagine.Height && !e.Cancel)
             {
                 int x = 0;
-                while (x < immagine.Width && !cancellato)
+                while (x < immagine.Width && !e.Cancel)
                 {
                     Color coloreCorrente = (immagine as Bitmap).GetPixel(x, y);
                     Color nuovoColore;
@@ -281,10 +285,19 @@ namespace Steganografia
                     x++;
                     posTotaleStatus++;
                     worker.ReportProgress(posTotaleStatus);
+                    if (worker.CancellationPending == true) e.Cancel = true;
                 }
                 y++;
             }
-            if(!cancellato) immagineGenerata = outputBitmap;    //Salvo l'immagine modificata
+            if(!e.Cancel) immagineGenerata = outputBitmap;    //Salvo l'immagine modificata
+        }
+
+        private void cancellaButton_Click(object sender, EventArgs e)
+        {
+            if(Pittore.WorkerSupportsCancellation == true)
+            {
+                Pittore.CancelAsync();
+            }
         }
 
         private void Pittore_FineDipinto(object sender, RunWorkerCompletedEventArgs e)

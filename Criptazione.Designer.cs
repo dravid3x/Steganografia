@@ -68,6 +68,7 @@ namespace Steganografia
             this.trackBar1.ContextMenuStrip = this.contextMenuStrip1;
             this.trackBar1.Location = new System.Drawing.Point(43, 411);
             this.trackBar1.Maximum = 10000;
+            this.trackBar1.Minimum = 1;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(184, 45);
             this.trackBar1.TabIndex = 0;
@@ -194,6 +195,7 @@ namespace Steganografia
             this.cancellaButton.TabIndex = 12;
             this.cancellaButton.Text = "Cancella Criptazione";
             this.cancellaButton.UseVisualStyleBackColor = true;
+            this.cancellaButton.Click += new System.EventHandler(this.cancellaButton_Click);
             // 
             // salvaButton
             // 
