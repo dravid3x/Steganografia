@@ -69,6 +69,9 @@
     <Compile Include="schiavo.cs">
       <SubType>Component</SubType>
     </Compile>
+    <EmbeddedResource Include="Criptazione.resx">
+      <DependentUpon>Criptazione.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Decriptazione.resx">
       <DependentUpon>Decriptazione.cs</DependentUpon>
     </EmbeddedResource>

@@ -160,7 +160,7 @@ namespace Steganografia
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(726, 433);
+            this.ClientSize = new System.Drawing.Size(708, 433);
             this.Controls.Add(this.nPixelLabel);
             this.Controls.Add(this.progressoLabel);
             this.Controls.Add(this.label2);
