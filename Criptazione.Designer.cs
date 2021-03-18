@@ -141,11 +141,11 @@ namespace Steganografia
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(329, 19);
+            this.label1.Location = new System.Drawing.Point(341, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(162, 13);
+            this.label1.Size = new System.Drawing.Size(140, 13);
             this.label1.TabIndex = 6;
-            this.label1.Text = "Caricare l\'immagine da decriptare";
+            this.label1.Text = "Caricare l\'immagine utilizzare";
             // 
             // caricaImgButton
             // 
@@ -183,7 +183,7 @@ namespace Steganografia
             this.iniziaButton.Name = "iniziaButton";
             this.iniziaButton.Size = new System.Drawing.Size(82, 60);
             this.iniziaButton.TabIndex = 11;
-            this.iniziaButton.Text = "Inizia Criptazione";
+            this.iniziaButton.Text = "Inizia Inserimento";
             this.iniziaButton.UseVisualStyleBackColor = true;
             this.iniziaButton.Click += new System.EventHandler(this.iniziaButton_Click);
             // 
@@ -193,7 +193,7 @@ namespace Steganografia
             this.cancellaButton.Name = "cancellaButton";
             this.cancellaButton.Size = new System.Drawing.Size(82, 60);
             this.cancellaButton.TabIndex = 12;
-            this.cancellaButton.Text = "Cancella Criptazione";
+            this.cancellaButton.Text = "Cancella Inserimento";
             this.cancellaButton.UseVisualStyleBackColor = true;
             this.cancellaButton.Click += new System.EventHandler(this.cancellaButton_Click);
             // 
@@ -247,7 +247,7 @@ namespace Steganografia
             this.nThreadTotaliLabel.Name = "nThreadTotaliLabel";
             this.nThreadTotaliLabel.Size = new System.Drawing.Size(136, 23);
             this.nThreadTotaliLabel.TabIndex = 19;
-            this.nThreadTotaliLabel.Text = "N. Thread Totali: 5238";
+            this.nThreadTotaliLabel.Text = "N. Thread Totali: N/A";
             this.nThreadTotaliLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // binarioBar
@@ -341,7 +341,7 @@ namespace Steganografia
             this.Controls.Add(this.inserisciFileButton);
             this.Controls.Add(this.trackBar1);
             this.Name = "Criptazione";
-            this.Text = "Criptazione";
+            this.Text = "Inserimento";
             this.Load += new System.EventHandler(this.Criptazione_Load);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);

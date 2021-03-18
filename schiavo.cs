@@ -23,7 +23,7 @@ namespace Steganografia
     {
         public string testoProcessato = "", testoDaProcessare = "";
         public bool finito = false;
-        private int NSchiavi;
+        private int NSchiavi = -1;
         public List<schiavo> schiavi = new List<schiavo>();
         public List<string> pezzi = new List<string>();
 
@@ -74,5 +74,7 @@ namespace Steganografia
             schiavo worker = sender as schiavo;
             worker.finito = true;
         }
+
+        public int nSchiavi { get { return NSchiavi; } }
     }
 }

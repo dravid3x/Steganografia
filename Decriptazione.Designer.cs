@@ -57,11 +57,11 @@ namespace Steganografia
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(30, 21);
+            this.label1.Location = new System.Drawing.Point(37, 21);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(162, 13);
+            this.label1.Size = new System.Drawing.Size(150, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Caricare l\'immagine da decriptare";
+            this.label1.Text = "Caricare l\'immagine da estrarre";
             // 
             // immagineCaricataPic
             // 
@@ -98,7 +98,7 @@ namespace Steganografia
             this.decriptaButton.Name = "decriptaButton";
             this.decriptaButton.Size = new System.Drawing.Size(114, 60);
             this.decriptaButton.TabIndex = 5;
-            this.decriptaButton.Text = "Avvia Decriptazione";
+            this.decriptaButton.Text = "Avvia Estrazione";
             this.decriptaButton.UseVisualStyleBackColor = true;
             this.decriptaButton.Click += new System.EventHandler(this.decriptaButton_Click);
             // 
@@ -108,7 +108,7 @@ namespace Steganografia
             this.cancellaDecButton.Name = "cancellaDecButton";
             this.cancellaDecButton.Size = new System.Drawing.Size(114, 60);
             this.cancellaDecButton.TabIndex = 6;
-            this.cancellaDecButton.Text = "Cancella Decriptazione";
+            this.cancellaDecButton.Text = "Cancella Estrazione";
             this.cancellaDecButton.UseVisualStyleBackColor = true;
             this.cancellaDecButton.Click += new System.EventHandler(this.cancellaDecButton_Click);
             // 
@@ -174,7 +174,7 @@ namespace Steganografia
             this.Controls.Add(this.label1);
             this.Controls.Add(this.caricaImgButton);
             this.Name = "Decriptazione";
-            this.Text = "Decriptazione";
+            this.Text = "Estrazione";
             this.Load += new System.EventHandler(this.Decriptazione_Load);
             ((System.ComponentModel.ISupportInitialize)(this.immagineCaricataPic)).EndInit();
             this.ResumeLayout(false);

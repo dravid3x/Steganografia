@@ -42,7 +42,6 @@ namespace Steganografia
                 pezzi.Add(pezzo);
             }
             mastino.pezzi = pezzi;  //Passo la lista di pezzi al mastino
-            MessageBox.Show(((testoDaCodificare.Length + lunghezzaBlocchiThread - 1) / lunghezzaBlocchiThread).ToString());
             mastino.GeneraSchiavi((testoDaCodificare.Length + lunghezzaBlocchiThread - 1) / lunghezzaBlocchiThread);
         }
 
@@ -53,7 +52,7 @@ namespace Steganografia
 
         private void blocco(ref string testoOriginale, ref string bloccoDiTesto, int nSchiavo)
         {
-            if (testoOriginale.Length >= (nSchiavo * lunghezzaBlocchiThread))   //Parti normali da lunghezzaBlocchi
+            if (testoOriginale.Length >= lunghezzaBlocchiThread)   //Parti normali da lunghezzaBlocchi
             {
                 bloccoDiTesto = testoOriginale.Substring(0, lunghezzaBlocchiThread);
                 testoOriginale = testoOriginale.Remove(0, lunghezzaBlocchiThread);
@@ -212,7 +211,7 @@ namespace Steganografia
             }
             else
             {
-                sindacoStatusLabel.Text = "Status: Concluso protocollo di lancio";
+                sindacoStatusLabel.Text = "Status: Avviata conversione in binario";
             }
         }
 
@@ -220,19 +219,18 @@ namespace Steganografia
         {
             immagineCaricataPic.SizeMode = PictureBoxSizeMode.StretchImage;
             immagineGenerataPic.SizeMode = PictureBoxSizeMode.StretchImage;
+            textConvertireBox.ScrollBars = ScrollBars.Vertical;
         }
 
         private void binarioUpdateButton_Click(object sender, EventArgs e)
         {
-            binarioBar.Value = Mastino.ContaFiniti();
-            if (Mastino.finito && binarioBar.Value != 0)
+            int nFiniti = Mastino.ContaFiniti();
+            binarioBar.Value = nFiniti;
+            if (Mastino.finito)
             {
                 testoInBinario = Mastino.testoProcessato;
-                IniziaConversioneImmagine();
-            }
-            else
-            {
-                binarioBar.Value = binarioBar.Maximum;
+                nThreadTotaliLabel.Text = "N. Thread Totali: " + Mastino.nSchiavi.ToString();
+                sindacoStatusLabel.Text = "Status: Inizio inserimento in immagine";
                 IniziaConversioneImmagine();
             }
         }
@@ -314,6 +312,8 @@ namespace Steganografia
             {
                 //Mostro l'immagine generata se richiesto
                 if (immagineGenerataPic.Visible) immagineGenerataPic.Image = immagineGenerata;
+                sindacoBar.Value = sindacoBar.Maximum;
+                sindacoStatusLabel.Text = "Status: Concluso inserimento in immagine";
                 trackBar1.Enabled = true;
             }
         }
