@@ -7,46 +7,46 @@ using System.ComponentModel;
 
 namespace Steganografia
 {
-    class schiavo : BackgroundWorker
+    class worker : BackgroundWorker
     {
         //BackgroundWorker worker = new BackgroundWorker();
         public string testoDaProcessare = "", testoProcessato = "";
         public bool finito = false;
-        public schiavo()
+        public worker()
         {
             //Non inserisco il testo da processare come parametro per poter riutilizzare questo schiavo anche nella decriptazione
         }
 
     }
 
-    class mastino : BackgroundWorker
+    class gestoreConvertitori : BackgroundWorker
     {
         public string testoProcessato = "", testoDaProcessare = "";
         public bool finito = false;
-        private int NSchiavi = -1;
-        public List<schiavo> schiavi = new List<schiavo>();
+        private int NConvertitori = -1;
+        public List<worker> convertitori = new List<worker>();
         public List<string> pezzi = new List<string>();
 
-        public mastino()
+        public gestoreConvertitori()
         {
 
         }
 
         public void GeneraSchiavi(int nSchiavi)
         {
-            NSchiavi = nSchiavi;
+            NConvertitori = nSchiavi;
             //Dichiaro e assegno ad ogni thread un pezzo di testo da processare
             for (int i = 0; i < nSchiavi; i++)
             {
-                schiavo worker = new schiavo();
+                worker worker = new worker();
                 worker.testoDaProcessare = pezzi[i];
                 worker.WorkerReportsProgress = true;
                 worker.WorkerSupportsCancellation = true;
                 worker.DoWork += schiavoWorker_Lavoro;
                 worker.RunWorkerCompleted += schiavoWorker_LavoroCompletato;
                 //worker.ProgressChanged += schiavoWorker_ProgressChanged;
-                schiavi.Add(worker);
-                schiavi[schiavi.Count - 1].RunWorkerAsync();
+                convertitori.Add(worker);
+                convertitori[convertitori.Count - 1].RunWorkerAsync();
             }
         }
 
@@ -54,10 +54,10 @@ namespace Steganografia
         {
             //Funzione che conta il numero di thread completati e in caso salva il testo finale
             int nFiniti = 0;
-            foreach (schiavo sc in schiavi) if(sc.finito) nFiniti++;
-            if (nFiniti == NSchiavi)
+            foreach (worker sc in convertitori) if(sc.finito) nFiniti++;
+            if (nFiniti == NConvertitori)
             {
-                foreach (schiavo sc in schiavi) testoProcessato += sc.testoProcessato;
+                foreach (worker sc in convertitori) testoProcessato += sc.testoProcessato;
                 finito = true;
             }
             return nFiniti;
@@ -65,16 +65,16 @@ namespace Steganografia
 
         private void schiavoWorker_Lavoro(object sender, DoWorkEventArgs e)
         {
-            schiavo worker = sender as schiavo;
+            worker worker = sender as worker;
             foreach (char c in worker.testoDaProcessare) worker.testoProcessato += (Convert.ToString(c, 2).PadLeft(8, '0'));
         }
 
         private void schiavoWorker_LavoroCompletato(object sender, RunWorkerCompletedEventArgs e)
         {
-            schiavo worker = sender as schiavo;
+            worker worker = sender as worker;
             worker.finito = true;
         }
 
-        public int nSchiavi { get { return NSchiavi; } }
+        public int nSchiavi { get { return NConvertitori; } }
     }
 }

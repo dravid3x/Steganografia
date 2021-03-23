@@ -14,33 +14,24 @@ namespace Steganografia
 {
     public partial class Form1 : Form
     {
-        Criptazione formCriptazione = new Criptazione();    //Dichiaro il nuovo form per la criptazione
-        Decriptazione formDecriptazione = new Decriptazione();    //Dichiaro il nuovo form per la criptazione
-        const int dimByte = 8, offSetLabel = 15, lunghezzaBlocchiThread = 1000;
-        string nomeFileOutput = "testoDecifrato", estensioneFileOutput = ".txt";   //Cambiare questo per cambiare il nome del file in output
-        bool visualizzaSoloMex = false, inserimentoDaFile = false;
-        PictureBox immagineOriginale = new PictureBox();
+        Inserimento formInserimento = new Inserimento();    //Dichiaro il nuovo form per la criptazione
+        Estrazione formEstrazione = new Estrazione();    //Dichiaro il nuovo form per la criptazione
 
         private void criptazioneButton_Click(object sender, EventArgs e)
         {
-            formCriptazione = new Criptazione();
-            formCriptazione.Show();
+            formInserimento = new Inserimento();
+            formInserimento.Show();
         }
 
         private void decriptazioneButton_Click(object sender, EventArgs e)
         {
-            formDecriptazione = new Decriptazione();
-            formDecriptazione.Show();
+            formEstrazione = new Estrazione();
+            formEstrazione.Show();
         }
 
         public Form1()
         {
             InitializeComponent();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

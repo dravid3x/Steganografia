@@ -1,7 +1,7 @@
 ﻿
 namespace Steganografia
 {
-    partial class Criptazione
+    partial class Inserimento
     {
         /// <summary>
         /// Required designer variable.
@@ -47,14 +47,14 @@ namespace Steganografia
             this.salvaButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.nBlocchiThreadLabel = new System.Windows.Forms.Label();
-            this.sindacoBar = new System.Windows.Forms.ProgressBar();
+            this.statoGeneraleBar = new System.Windows.Forms.ProgressBar();
             this.label4 = new System.Windows.Forms.Label();
             this.nThreadTotaliLabel = new System.Windows.Forms.Label();
             this.binarioBar = new System.Windows.Forms.ProgressBar();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.sindacoStatusLabel = new System.Windows.Forms.Label();
-            this.pittoreBar = new System.Windows.Forms.ProgressBar();
+            this.generaleStatusLabel = new System.Windows.Forms.Label();
+            this.inserimentoinImmagineBar = new System.Windows.Forms.ProgressBar();
             this.label7 = new System.Windows.Forms.Label();
             this.binarioUpdateButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -225,12 +225,12 @@ namespace Steganografia
             this.nBlocchiThreadLabel.TabIndex = 15;
             this.nBlocchiThreadLabel.Text = "1000";
             // 
-            // sindacoBar
+            // statoGeneraleBar
             // 
-            this.sindacoBar.Location = new System.Drawing.Point(332, 423);
-            this.sindacoBar.Name = "sindacoBar";
-            this.sindacoBar.Size = new System.Drawing.Size(440, 23);
-            this.sindacoBar.TabIndex = 16;
+            this.statoGeneraleBar.Location = new System.Drawing.Point(332, 423);
+            this.statoGeneraleBar.Name = "statoGeneraleBar";
+            this.statoGeneraleBar.Size = new System.Drawing.Size(440, 23);
+            this.statoGeneraleBar.TabIndex = 16;
             // 
             // label4
             // 
@@ -275,21 +275,21 @@ namespace Steganografia
             this.label6.TabIndex = 22;
             this.label6.Text = "Inserimento nell\'Immagine";
             // 
-            // sindacoStatusLabel
+            // generaleStatusLabel
             // 
-            this.sindacoStatusLabel.Location = new System.Drawing.Point(436, 390);
-            this.sindacoStatusLabel.Name = "sindacoStatusLabel";
-            this.sindacoStatusLabel.Size = new System.Drawing.Size(225, 23);
-            this.sindacoStatusLabel.TabIndex = 23;
-            this.sindacoStatusLabel.Text = "Stato: In Attesa";
-            this.sindacoStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.generaleStatusLabel.Location = new System.Drawing.Point(436, 390);
+            this.generaleStatusLabel.Name = "generaleStatusLabel";
+            this.generaleStatusLabel.Size = new System.Drawing.Size(225, 23);
+            this.generaleStatusLabel.TabIndex = 23;
+            this.generaleStatusLabel.Text = "Stato: In Attesa";
+            this.generaleStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // pittoreBar
+            // inserimentoinImmagineBar
             // 
-            this.pittoreBar.Location = new System.Drawing.Point(595, 515);
-            this.pittoreBar.Name = "pittoreBar";
-            this.pittoreBar.Size = new System.Drawing.Size(177, 23);
-            this.pittoreBar.TabIndex = 24;
+            this.inserimentoinImmagineBar.Location = new System.Drawing.Point(595, 515);
+            this.inserimentoinImmagineBar.Name = "inserimentoinImmagineBar";
+            this.inserimentoinImmagineBar.Size = new System.Drawing.Size(177, 23);
+            this.inserimentoinImmagineBar.TabIndex = 24;
             // 
             // label7
             // 
@@ -310,21 +310,21 @@ namespace Steganografia
             this.binarioUpdateButton.UseVisualStyleBackColor = true;
             this.binarioUpdateButton.Click += new System.EventHandler(this.binarioUpdateButton_Click);
             // 
-            // Criptazione
+            // Inserimento
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(883, 586);
             this.Controls.Add(this.binarioUpdateButton);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.pittoreBar);
-            this.Controls.Add(this.sindacoStatusLabel);
+            this.Controls.Add(this.inserimentoinImmagineBar);
+            this.Controls.Add(this.generaleStatusLabel);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.binarioBar);
             this.Controls.Add(this.nThreadTotaliLabel);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.sindacoBar);
+            this.Controls.Add(this.statoGeneraleBar);
             this.Controls.Add(this.nBlocchiThreadLabel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.salvaButton);
@@ -340,9 +340,9 @@ namespace Steganografia
             this.Controls.Add(this.inserisciTextBoxButton);
             this.Controls.Add(this.inserisciFileButton);
             this.Controls.Add(this.trackBar1);
-            this.Name = "Criptazione";
+            this.Name = "Inserimento";
             this.Text = "Inserimento";
-            this.Load += new System.EventHandler(this.Criptazione_Load);
+            this.Load += new System.EventHandler(this.Inserimento_Load);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.immagineCaricataPic)).EndInit();
@@ -371,14 +371,14 @@ namespace Steganografia
         private System.Windows.Forms.Button salvaButton;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label nBlocchiThreadLabel;
-        private System.Windows.Forms.ProgressBar sindacoBar;
+        private System.Windows.Forms.ProgressBar statoGeneraleBar;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label nThreadTotaliLabel;
         private System.Windows.Forms.ProgressBar binarioBar;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label sindacoStatusLabel;
-        private System.Windows.Forms.ProgressBar pittoreBar;
+        private System.Windows.Forms.Label generaleStatusLabel;
+        private System.Windows.Forms.ProgressBar inserimentoinImmagineBar;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button binarioUpdateButton;
     }

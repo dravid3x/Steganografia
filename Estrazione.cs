@@ -11,28 +11,28 @@ using System.Windows.Forms;
 
 namespace Steganografia
 {
-    public partial class Decriptazione : Form
+    public partial class Estrazione : Form
     {
         private const int dimByte = 8;
         private Bitmap immagineCaricata;
         private readonly Bitmap immagineVuota;
-        private schiavo decriptazioneWorker = new schiavo();
+        private worker estrazioneWorker = new worker();
         private string testoOttenuto = "";
 
-        public Decriptazione()
+        public Estrazione()
         {
             InitializeComponent();
         }
 
-        private void Decriptazione_Load(object sender, EventArgs e)
+        private void Estrazione_Load(object sender, EventArgs e)
         {
             immagineCaricataPic.SizeMode = PictureBoxSizeMode.StretchImage; //Strecho l'immagine per farcela stare
-            textDecriptato.ScrollBars = ScrollBars.Vertical;    //Imposto la barra per scorrere la textbox
-            decriptazioneWorker.WorkerReportsProgress = true;   //Abilito il report dello stato del worker
-            decriptazioneWorker.WorkerSupportsCancellation = true;  //Abilito la possibilità di cancellare la task del thread
-            decriptazioneWorker.RunWorkerCompleted += decriptazioneWorker_LavoroCompletato;     //Associo la funzione di LavoroCompletato
-            decriptazioneWorker.ProgressChanged += decriptazioneWorker_ProgressChanged;     //Associo la funzione di quando il worker progredisce
-            decriptazioneWorker.DoWork += decriptazioneWorker_Lavora;       //Associo la funzione di Lavoro
+            textDecriptato.ScrollBars = ScrollBars.Both;    //Imposto la barra per scorrere la textbox
+            estrazioneWorker.WorkerReportsProgress = true;   //Abilito il report dello stato del worker
+            estrazioneWorker.WorkerSupportsCancellation = true;  //Abilito la possibilità di cancellare la task del thread
+            estrazioneWorker.RunWorkerCompleted += estrazioneWorker_LavoroCompletato;     //Associo la funzione di LavoroCompletato
+            estrazioneWorker.ProgressChanged += estrazioneWorker_ProgressChanged;     //Associo la funzione di quando il worker progredisce
+            estrazioneWorker.DoWork += estrazioneWorker_Lavora;       //Associo la funzione di Lavoro
             progressoLabel.Text = "Stato conversione: In Attesa";
         }
 
@@ -80,16 +80,16 @@ namespace Steganografia
             }
             else
             {
-                if (decriptazioneWorker.IsBusy != true)
+                if (estrazioneWorker.IsBusy != true)
                 {
-                    //Inizio il lavoro di decriptazione, imposto il valore attuale e massimo della progressBar
+                    //Inizio il lavoro di estrazione, imposto il valore attuale e massimo della progressBar
                     progressBar1.Maximum = immagineCaricata.Width * immagineCaricata.Height;    //Imposto il valore massimo della progressBar
                     progressBar1.Value = 0;     //Imposto a 0 il valore della progressBar
                     progressBar1.Step = 1;      //Imposto a 1 il valore che verrà aggiunto ad ogni "passo avanti" della progressBar (ovvero ogni volta che avanzo di 1 pixel"
                     textDecriptato.Clear();     //Ripulisco la textBox del testoDecriptato
                     progressoLabel.Text = "Stato Conversione: In Corso";
                     nPixelLabel.Text = progressBar1.Maximum.ToString() + " Pixel Totali";
-                    decriptazioneWorker.RunWorkerAsync();       //Do il via alla conversione
+                    estrazioneWorker.RunWorkerAsync();       //Do il via alla conversione
                 }
                 else
                 {
@@ -98,12 +98,12 @@ namespace Steganografia
             }
         }
 
-        private void decriptazioneWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void estrazioneWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             progressBar1.PerformStep();  //Riporto la percentuale di progresso tramite la progressBar. So che non utilizzo il valore progress del worker ma dettagli. Volevo utilizzare la PerformStep perchè si
         }
 
-        private void decriptazioneWorker_LavoroCompletato(object sender, RunWorkerCompletedEventArgs e)
+        private void estrazioneWorker_LavoroCompletato(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled == true)
             {
@@ -119,14 +119,14 @@ namespace Steganografia
             {
                 //Identifico che il worker ha terminato il suo compito correttamente
                 progressoLabel.Text = "Stato Conversione: Completata!";
-                testoOttenuto = decriptazioneWorker.testoProcessato;
+                testoOttenuto = estrazioneWorker.testoProcessato;
                 textDecriptato.Text = testoOttenuto;
             }
         }
 
-        private void decriptazioneWorker_Lavora(object sender, DoWorkEventArgs e)
+        private void estrazioneWorker_Lavora(object sender, DoWorkEventArgs e)
         {
-            schiavo worker = sender as schiavo;
+            worker worker = sender as worker;
             int x = 0, y = 0, posColore = 0, progresso = 0;
             string carattereFine = "00000100";
             bool tailDetected = false;
@@ -188,9 +188,9 @@ namespace Steganografia
         private void cancellaDecButton_Click(object sender, EventArgs e)
         {
             //Controllo inutile ma sempre meglio inserirlo
-            if (decriptazioneWorker.WorkerSupportsCancellation == true)
+            if (estrazioneWorker.WorkerSupportsCancellation == true)
             {
-                decriptazioneWorker.CancelAsync();  //Cancello il lavoro in corso
+                estrazioneWorker.CancelAsync();  //Cancello il lavoro in corso
             }
         }
 
@@ -216,5 +216,6 @@ namespace Steganografia
             }
             catch (Exception) { /*MessageBox.Show(ecc.Message);*/ }
         }
+
     }
 }

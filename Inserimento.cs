@@ -11,27 +11,27 @@ using System.Windows.Forms;
 
 namespace Steganografia
 {
-    public partial class Criptazione : Form
+    public partial class Inserimento : Form
     {
         private const int lunghezzaBlocchiThreadDefault = 1000, dimByte = 8;
         private int lunghezzaBlocchiThread = 1000;
         private Bitmap immagineCaricata, immagineGenerata;
         private readonly Bitmap immagineVuota;
         private string testoDaCodificare = "", testoInBinario = "";
-        private mastino Mastino = new mastino();
-        private BackgroundWorker Sindaco = new BackgroundWorker();
-        private BackgroundWorker Pittore = new BackgroundWorker();
+        private gestoreConvertitori GestoreConvertitori = new gestoreConvertitori();
+        private BackgroundWorker GestoreGenerale = new BackgroundWorker();
+        private BackgroundWorker InserimentoInImmagine_Worker = new BackgroundWorker();
 
-        public Criptazione()
+        public Inserimento()
         {
             InitializeComponent();
         }
 
-        private void mastino_Lavoro(object sender, DoWorkEventArgs e)
+        private void gestoreConvertitori_Lavoro(object sender, DoWorkEventArgs e)
         {
-            mastino mastino = sender as mastino;
-            List<schiavo> schiavi = new List<schiavo>();
-            string testo = mastino.testoDaProcessare;
+            gestoreConvertitori gestoreConvertitori = sender as gestoreConvertitori;
+            List<worker> schiavi = new List<worker>();
+            string testo = gestoreConvertitori.testoDaProcessare;
             int nSchiavi = (testo.Length + lunghezzaBlocchiThread - 1) / lunghezzaBlocchiThread;
             List<string> pezzi = new List<string>();
             //Spezzettamento del testo in blocchi di lunghezza lunghezzaBlocchiThread
@@ -41,11 +41,11 @@ namespace Steganografia
                 blocco(ref testo, ref pezzo, i);
                 pezzi.Add(pezzo);
             }
-            mastino.pezzi = pezzi;  //Passo la lista di pezzi al mastino
-            mastino.GeneraSchiavi((testoDaCodificare.Length + lunghezzaBlocchiThread - 1) / lunghezzaBlocchiThread);
+            gestoreConvertitori.pezzi = pezzi;  //Passo la lista di pezzi al gestoreConvertitori
+            gestoreConvertitori.GeneraSchiavi((testoDaCodificare.Length + lunghezzaBlocchiThread - 1) / lunghezzaBlocchiThread);
         }
 
-        private void mastino_LavoroCompletato(object sender, RunWorkerCompletedEventArgs e)
+        private void gestoreConvertitori_LavoroCompletato(object sender, RunWorkerCompletedEventArgs e)
         {
 
         }
@@ -81,12 +81,12 @@ namespace Steganografia
             }
             else
             {
-                Mastino.testoDaProcessare = parola;
-                Mastino.DoWork += mastino_Lavoro;
-                Mastino.RunWorkerCompleted += mastino_LavoroCompletato;
-                Mastino.RunWorkerAsync();
-                //while (!Mastino.finito) ;
-                testoInBinario = Mastino.testoProcessato;
+                GestoreConvertitori.testoDaProcessare = parola;
+                GestoreConvertitori.DoWork += gestoreConvertitori_Lavoro;
+                GestoreConvertitori.RunWorkerCompleted += gestoreConvertitori_LavoroCompletato;
+                GestoreConvertitori.RunWorkerAsync();
+                //while (!GestoreConvertitori.finito) ;
+                testoInBinario = GestoreConvertitori.testoProcessato;
             }
         }
 
@@ -170,19 +170,19 @@ namespace Steganografia
             {
                 trackBar1.Enabled = false;
                 //Avvio la criptazione, inizializzo il sindaco
-                Sindaco = new BackgroundWorker();
+                GestoreGenerale = new BackgroundWorker();
                 binarioBar.Value = 0;
                 binarioBar.Maximum = (testoDaCodificare.Length + lunghezzaBlocchiThread - 1) / lunghezzaBlocchiThread;
-                Sindaco.WorkerReportsProgress = true;
-                Sindaco.WorkerSupportsCancellation = true;
-                Sindaco.DoWork += Sindaco_Lavoro;
-                Sindaco.RunWorkerCompleted += Sindaco_LavoroCompletato;
-                Sindaco.ProgressChanged += Sindaco_ProgressChanged;
-                Sindaco.RunWorkerAsync();
+                GestoreGenerale.WorkerReportsProgress = true;
+                GestoreGenerale.WorkerSupportsCancellation = true;
+                GestoreGenerale.DoWork += GestoreGenerale_Lavoro;
+                GestoreGenerale.RunWorkerCompleted += GestoreGenerale_LavoroCompletato;
+                GestoreGenerale.ProgressChanged += GestoreGenerale_ProgressChanged;
+                GestoreGenerale.RunWorkerAsync();
             }
         }
 
-        private void Sindaco_Lavoro(object sender, DoWorkEventArgs e)
+        private void GestoreGenerale_Lavoro(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
             if (!e.Cancel)
@@ -194,16 +194,16 @@ namespace Steganografia
             }
         }
 
-        private void Sindaco_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void GestoreGenerale_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            sindacoBar.Value = e.ProgressPercentage;    //Incremento il valore della progressBar
+            statoGeneraleBar.Value = e.ProgressPercentage;    //Incremento il valore della progressBar
         }
 
-        private void Sindaco_LavoroCompletato(object sender, RunWorkerCompletedEventArgs e)
+        private void GestoreGenerale_LavoroCompletato(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled == true)
             {
-                sindacoStatusLabel.Text = "Status: Cancellato";
+                generaleStatusLabel.Text = "Status: Cancellato";
             }
             else if (e.Error != null)
             {
@@ -211,28 +211,29 @@ namespace Steganografia
             }
             else
             {
-                sindacoStatusLabel.Text = "Status: Avviata conversione in binario";
+                generaleStatusLabel.Text = "Status: Avviata conversione in binario";
             }
-        }
-
-        private void Criptazione_Load(object sender, EventArgs e)
-        {
-            immagineCaricataPic.SizeMode = PictureBoxSizeMode.StretchImage;
-            immagineGenerataPic.SizeMode = PictureBoxSizeMode.StretchImage;
-            textConvertireBox.ScrollBars = ScrollBars.Vertical;
         }
 
         private void binarioUpdateButton_Click(object sender, EventArgs e)
         {
-            int nFiniti = Mastino.ContaFiniti();
-            binarioBar.Value = nFiniti;
-            if (Mastino.finito)
+            if(testoDaCodificare.Length < lunghezzaBlocchiThread)
             {
-                testoInBinario = Mastino.testoProcessato;
-                nThreadTotaliLabel.Text = "N. Thread Totali: " + Mastino.nSchiavi.ToString();
-                sindacoStatusLabel.Text = "Status: Inizio inserimento in immagine";
                 IniziaConversioneImmagine();
             }
+            else
+            {
+                int nFiniti = GestoreConvertitori.ContaFiniti();
+                binarioBar.Value = nFiniti;
+                if (GestoreConvertitori.finito)
+                {
+                    testoInBinario = GestoreConvertitori.testoProcessato;
+                    nThreadTotaliLabel.Text = "N. Thread Totali: " + GestoreConvertitori.nSchiavi.ToString();
+                    generaleStatusLabel.Text = "Status: Inizio inserimento in immagine";
+                    IniziaConversioneImmagine();
+                }
+            }
+
         }
 
         private void salvaButton_Click(object sender, EventArgs e)
@@ -252,7 +253,7 @@ namespace Steganografia
             catch (Exception) { /*MessageBox.Show(ecc.Message);*/ }
         }
 
-        private void Pittore_Dipingi(object sender, DoWorkEventArgs e)
+        private void InserimentoInImmagine_Lavoro(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
             Image immagine = immagineCaricata; string testo = testoInBinario;
@@ -292,17 +293,24 @@ namespace Steganografia
 
         private void cancellaButton_Click(object sender, EventArgs e)
         {
-            if(Pittore.WorkerSupportsCancellation == true)
+            if(InserimentoInImmagine_Worker.WorkerSupportsCancellation == true)
             {
-                Pittore.CancelAsync();
+                InserimentoInImmagine_Worker.CancelAsync();
             }
         }
 
-        private void Pittore_FineDipinto(object sender, RunWorkerCompletedEventArgs e)
+        private void Inserimento_Load(object sender, EventArgs e)
+        {
+            immagineCaricataPic.SizeMode = PictureBoxSizeMode.StretchImage;
+            immagineGenerataPic.SizeMode = PictureBoxSizeMode.StretchImage;
+            textConvertireBox.ScrollBars = ScrollBars.Both;
+        }
+
+        private void InserimentoInImmagine_Fine(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled == true)
             {
-                sindacoStatusLabel.Text = "Status: Cancellato";
+                generaleStatusLabel.Text = "Status: Cancellato";
             }
             else if (e.Error != null)
             {
@@ -312,28 +320,28 @@ namespace Steganografia
             {
                 //Mostro l'immagine generata se richiesto
                 if (immagineGenerataPic.Visible) immagineGenerataPic.Image = immagineGenerata;
-                sindacoBar.Value = sindacoBar.Maximum;
-                sindacoStatusLabel.Text = "Status: Concluso inserimento in immagine";
+                statoGeneraleBar.Value = statoGeneraleBar.Maximum;
+                generaleStatusLabel.Text = "Status: Concluso inserimento in immagine";
                 trackBar1.Enabled = true;
             }
         }
 
-        private void Pittore_CambioColore(object sender, ProgressChangedEventArgs e)
+        private void InserimentoInImmagine_Progresso(object sender, ProgressChangedEventArgs e)
         {
-            pittoreBar.Value = e.ProgressPercentage;    //Aggiorno il valore della progressBar della conversione in immagine
+            inserimentoinImmagineBar.Value = e.ProgressPercentage;    //Aggiorno il valore della progressBar della conversione in immagine
         }
 
         private void IniziaConversioneImmagine()
         {
-            //Inizializzo il pittore
-            pittoreBar.Maximum = immagineCaricata.Width * immagineCaricata.Height;
-            Pittore = new BackgroundWorker();
-            Pittore.WorkerReportsProgress = true;
-            Pittore.WorkerSupportsCancellation = true;
-            Pittore.DoWork += Pittore_Dipingi;
-            Pittore.RunWorkerCompleted += Pittore_FineDipinto;
-            Pittore.ProgressChanged += Pittore_CambioColore;
-            Pittore.RunWorkerAsync();
+            //Inizializzo il InserimentoInImmagine_Worker
+            inserimentoinImmagineBar.Maximum = immagineCaricata.Width * immagineCaricata.Height;
+            InserimentoInImmagine_Worker = new BackgroundWorker();
+            InserimentoInImmagine_Worker.WorkerReportsProgress = true;
+            InserimentoInImmagine_Worker.WorkerSupportsCancellation = true;
+            InserimentoInImmagine_Worker.DoWork += InserimentoInImmagine_Lavoro;
+            InserimentoInImmagine_Worker.RunWorkerCompleted += InserimentoInImmagine_Fine;
+            InserimentoInImmagine_Worker.ProgressChanged += InserimentoInImmagine_Progresso;
+            InserimentoInImmagine_Worker.RunWorkerAsync();
         }
     }
 }

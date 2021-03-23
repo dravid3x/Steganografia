@@ -62,7 +62,6 @@
             this.Controls.Add(this.criptazioneButton);
             this.Name = "Form1";
             this.Text = "Menu Steganografia";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }

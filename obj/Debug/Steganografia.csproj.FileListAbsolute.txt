@@ -2,11 +2,11 @@ C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\Re
 C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\bin\Debug\Steganografia.exe
 C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\bin\Debug\Steganografia.pdb
 C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.csprojAssemblyReference.cache
-C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.Criptazione.resources
-C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.Decriptazione.resources
 C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.Form1.resources
 C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.Properties.Resources.resources
 C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.csproj.GenerateResource.cache
 C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.csproj.CoreCompileInputs.cache
 C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.exe
 C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.pdb
+C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.Inserimento.resources
+C:\Users\dadol\OneDrive\Scuola\Informatica\Codifica Algoritmi\VisualStudio\C#\RepSteganografia\Steganografia\Steganografia\obj\Debug\Steganografia.Estrazione.resources

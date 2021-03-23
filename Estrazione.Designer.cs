@@ -1,7 +1,7 @@
 ﻿
 namespace Steganografia
 {
-    partial class Decriptazione
+    partial class Estrazione
     {
         /// <summary>
         /// Required designer variable.
@@ -156,7 +156,7 @@ namespace Steganografia
             this.progressoLabel.Text = "Stato conversione: In Attesa";
             this.progressoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // Decriptazione
+            // Estrazione
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -173,9 +173,9 @@ namespace Steganografia
             this.Controls.Add(this.immagineCaricataPic);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.caricaImgButton);
-            this.Name = "Decriptazione";
+            this.Name = "Estrazione";
             this.Text = "Estrazione";
-            this.Load += new System.EventHandler(this.Decriptazione_Load);
+            this.Load += new System.EventHandler(this.Estrazione_Load);
             ((System.ComponentModel.ISupportInitialize)(this.immagineCaricataPic)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
