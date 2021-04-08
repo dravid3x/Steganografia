@@ -47,7 +47,7 @@ namespace Steganografia
 
         private void gestoreConvertitori_LavoroCompletato(object sender, RunWorkerCompletedEventArgs e)
         {
-
+            //
         }
 
         private void blocco(ref string testoOriginale, ref string bloccoDiTesto, int nSchiavo)

@@ -41,7 +41,9 @@ namespace Steganografia
             this.label2 = new System.Windows.Forms.Label();
             this.nPixelLabel = new System.Windows.Forms.Label();
             this.progressoLabel = new System.Windows.Forms.Label();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.immagineCaricataPic)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // caricaImgButton
@@ -156,11 +158,19 @@ namespace Steganografia
             this.progressoLabel.Text = "Stato conversione: In Attesa";
             this.progressoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(75, 171);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDown1.TabIndex = 11;
+            // 
             // Estrazione
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(708, 433);
+            this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.nPixelLabel);
             this.Controls.Add(this.progressoLabel);
             this.Controls.Add(this.label2);
@@ -177,6 +187,7 @@ namespace Steganografia
             this.Text = "Estrazione";
             this.Load += new System.EventHandler(this.Estrazione_Load);
             ((System.ComponentModel.ISupportInitialize)(this.immagineCaricataPic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -196,5 +207,6 @@ namespace Steganografia
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label nPixelLabel;
         private System.Windows.Forms.Label progressoLabel;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
     }
 }
